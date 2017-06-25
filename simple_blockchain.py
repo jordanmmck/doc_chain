@@ -2,18 +2,30 @@ import hashlib
 import random
 import array
 import json
+import sys
 
 
-class block(object):
-    def __init__(self, parent_hash, transactions_list, nonce):
+"""
+    Takes any arg form?
+    Returns digest in int form
+"""
+def hash(payload):
+    payload = str(payload)
+    payload = payload.encode()
+    hash_object = hashlib.sha256(payload)
+    int_digest = int.from_bytes(hash_object.digest(),byteorder='big')
+    return int_digest
+
+class Block(object):
+    def __init__(self, parent_hash, document_hash):
         self.parent_hash = parent_hash
-        self.transactions_list = transactions_list
-        self.nonce = nonce
+        self.document_hash = document_hash
+        self.nonce = random.randint(0, sys.maxsize)
 
     def _get_payload_string(self):
-        block_string = '{hash}/{transactions}/{nonce}'.format(
+        block_string = '{hash}/{document_hash}/{nonce}'.format(
                         hash=str(self.parent_hash),
-                        transactions=''.join(self.transactions_list),
+                        document_hash=str(self.document_hash),
                         nonce=str(self.nonce)
                     )
 
@@ -27,24 +39,45 @@ class block(object):
     """
     def mine(self, difficulty):
 
-        target = 2**(257-difficulty)-1
-        hash_val = 2**(257)-1
+        target = 2 ** (257 - difficulty) - 1
+        hash_val = 2 ** (257) - 1
 
         block_string = self._get_payload_string()
         while hash_val > target:
-            payload = block_string.encode()
-            hash_object = hashlib.sha256(payload)
-            hash_val = int.from_bytes(hash_object.digest(),byteorder='big')
+            hash_val = hash(block_string)
             block_string = self._get_payload_string()
-            self.nonce += 1
+            self.nonce = (self.nonce + 1) % sys.maxsize
 
         return hash_val
 
 
-# print(hash_val.zfill(32))
-# print(target.zfill(32))
+class BlockChain(object):
+    def __init__(self):
+        self.blockchain = []
+        self.num_blocks = 0
+        self.last_block_hash = 0
+        self.difficulty = 0
 
-# gets a string
-# hash_val = hash_object.hexdigest()
-# prints an int
-# print(int.from_bytes(hash_object.digest(), byteorder='big'))
+    def calibrate_difficulty(self):
+        self.difficulty = 4
+
+    def _append_block(self, block):
+        self.blockchain.append(block)
+        self.num_blocks += 1
+
+    def hash_document(self, document):
+        return random.randint(0,100000000000)
+
+    def validate_blockchain(self):
+        pass
+
+    def create_block(self, document):
+        document_hash = self.hash_document(document)
+        block = Block(self.last_block_hash, document_hash)
+        self._append_block(block)
+
+        if self.difficulty == 0:
+            self.calibrate_difficulty()
+
+        self.last_block_hash = block.mine(3)
+

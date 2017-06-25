@@ -1,11 +1,11 @@
 import unittest
-from simple_blockchain import block
+from simple_blockchain import Block, BlockChain, hash
 
 
-class testSimpleBlock(unittest.TestCase):
+class test_block(unittest.TestCase):
 
     def setUp(self):
-        self.sample_block = block('0x123fff', ['t0', 't1', 't2'], 0)
+        self.sample_block = Block('0x123fff', 123123123)
 
     def test_mine_hash_val_less_than_target(self):
         # arrange
@@ -17,17 +17,30 @@ class testSimpleBlock(unittest.TestCase):
         # assert
         assert hash_val < 2**(257-difficulty)-1
 
-class testSimpleBlockchain(unittest.TestCase):
+class test_blockchain(unittest.TestCase):
 
     def setUp(self):
-        self.sample_block = block('0x123fff', ['t0', 't1', 't2'], 0)
+        self.sample_blockchain = BlockChain()
 
-    def test_mine_hash_val_less_than_target(self):
-        # arrange
-        difficulty = 3
-
+    def test_create_genesis_block(self):
         # act
-        hash_val = self.sample_block.mine(difficulty)
+        self.sample_blockchain.create_block(123123123)
 
         # assert
-        assert hash_val < 2**(257-difficulty)-1
+        # if the blockchain is empty then first block has prev of 0, not addr passed in
+        self.assertEqual(self.sample_blockchain.blockchain[0].parent_hash, 0)
+
+    def test_create_non_genesis_block(self):
+        # arrange
+        self.sample_blockchain.create_block(45325345524)
+        self.sample_blockchain.create_block(123)
+
+        # act
+        hash_of_first_block = hash(self.sample_blockchain.blockchain[0])
+        print(hash_of_first_block)
+
+        # assert
+        self.assertEqual(self.sample_blockchain.num_blocks, 2)
+        self.assertEqual(self.sample_blockchain.blockchain[1].parent_hash, hash_of_first_block)
+
+
