@@ -15,22 +15,39 @@ def sha256(payload):
     return int_digest
 
 class Block(object):
-    def __init__(self, parent_hash, document_hash):
+    def __init__(self, parent_hash, document_hash, document_name):
         self.parent_hash = parent_hash
         self.document_hash = document_hash
+        self.document_name = document_name
+        self.final_nonce = None
         self.block_string = '{parent_hash}/{document_hash}/'.format(
             parent_hash=str(self.parent_hash),
             document_hash=str(self.document_hash)
         )
 
-    def __repr__(self):
-        return self.block_string
+    def pretty_print(self):
+        block = (
+                " \t{top_border}\n"
+                "\t| HEADER  : 0x{header:064x}\n"
+                "\t| DOC_NAME: {doc_name}\n"
+                "\t| DOC_HASH: 0x{doc_hash:064x}\n"
+                "\t| NONCE   : 0x{nonce:064x}\n"
+                "\t{bottom_border}\n".format( 
+                        top_border='-'*80,
+                        header=self.parent_hash,
+                        doc_name=self.document_name,
+                        doc_hash=self.document_hash,
+                        nonce=self.final_nonce,
+                        bottom_border='-'*80
+                    )
+                )
+        print(block)
 
     """
         difficulty: 0-256
-            0: all ones, every number is smaller than this (instant win)
-            256: all zeroes, every number is larger than this (impossible to win)
-            Each level is 2 times more difficult
+            0: all ones, every number is smaller than this (insta mine)
+            256: all zeroes, every number is larger than this (impossible to mine)
+            Each level is more difficult by a factor of 2
     """
     def mine(self, difficulty):
         target = 2 ** (257 - difficulty) - 1
@@ -46,6 +63,7 @@ class Block(object):
             hash_val = sha256(block_string)
 
         self.block_string = block_string
+        self.final_nonce = nonce
         return hash_val
 
 
@@ -57,8 +75,15 @@ class BlockChain(object):
         self.difficulty = 0
         self.head = None
 
+    def pretty_print(self):
+        print()
+        for block in self.blockchain:
+            block.pretty_print()
+            print("\t\t|")
+            print("\t\tv")
+
     def calibrate_difficulty(self):
-        self.difficulty = 4
+        self.difficulty = 14
 
     def _append_block(self, block):
         self.blockchain.append(block)
@@ -82,15 +107,26 @@ class BlockChain(object):
 
         return True
 
-    def create_block(self, document):
+    def create_block(self, document, document_name):
         document_hash = self.hash_document(document)
-        block = Block(self.last_block_hash, document_hash)
+        block = Block(self.last_block_hash, document_hash, document_name)
         self._append_block(block)
 
         if self.difficulty == 0:
             self.calibrate_difficulty()
 
-        self.last_block_hash = block.mine(3)
+        self.last_block_hash = block.mine(self.difficulty)
         if not self.head:
             self.head = block
 
+
+class DocumentOrderOfExistence(object):
+    def __init__(self):
+        self.blockchain = BlockChain()
+        self.document_count = 0
+
+    def find_doc_position(self, document):
+        pass
+
+    def get_full_doc_ordering(self):
+        pass
