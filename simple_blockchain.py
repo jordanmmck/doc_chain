@@ -7,7 +7,7 @@ import sys
     Takes any arg form?
     Returns digest in int form
 """
-def hash(payload):
+def sha256(payload):
     payload = str(payload)
     payload = payload.encode()
     hash_object = hashlib.sha256(payload)
@@ -39,11 +39,11 @@ class Block(object):
 
         # set block string with initial nonce and hash it
         block_string = self.block_string + str(nonce)
-        hash_val = hash(block_string)
+        hash_val = sha256(block_string)
         while hash_val > target:
             nonce = (nonce + 1) % sys.maxsize
             block_string = self.block_string + str(nonce)
-            hash_val = hash(block_string)
+            hash_val = sha256(block_string)
 
         self.block_string = block_string
         return hash_val
@@ -55,6 +55,7 @@ class BlockChain(object):
         self.num_blocks = 0
         self.last_block_hash = 0
         self.difficulty = 0
+        self.head = None
 
     def calibrate_difficulty(self):
         self.difficulty = 4
@@ -67,18 +68,29 @@ class BlockChain(object):
         self.blockchain = []
 
     def hash_document(self, document):
-        return hash(document)
+        return sha256(document)
 
-    def validate_blockchain(self):
-        pass
+    def validate(self):
+        if self.head.parent_hash == 0:
+            return True
+
+        expected_hash = self.head.parent_hash
+        for block in reversed(blockchain[1:]):
+            actual_hash = hash(block.block_string)
+            if expected_hash != actual_hash:
+                return False
+
+        return True
 
     def create_block(self, document):
         document_hash = self.hash_document(document)
-        fresh_block = Block(self.last_block_hash, document_hash)
-        self._append_block(fresh_block)
+        block = Block(self.last_block_hash, document_hash)
+        self._append_block(block)
 
         if self.difficulty == 0:
             self.calibrate_difficulty()
 
-        self.last_block_hash = fresh_block.mine(3)
+        self.last_block_hash = block.mine(3)
+        if not self.head:
+            self.head = block
 

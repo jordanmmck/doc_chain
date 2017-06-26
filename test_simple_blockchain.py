@@ -1,5 +1,5 @@
 import unittest
-from simple_blockchain import Block, BlockChain, hash
+from simple_blockchain import Block, BlockChain, sha256
 
 
 class test_block(unittest.TestCase):
@@ -37,9 +37,14 @@ class test_blockchain(unittest.TestCase):
         self.sample_blockchain.create_block(456456456)
 
         # act
-        hash_of_first_block = hash(self.sample_blockchain.blockchain[0].block_string)
+        hash_of_first_block = sha256(self.sample_blockchain.blockchain[0].block_string)
 
         # assert
         self.assertEqual(self.sample_blockchain.blockchain[1].parent_hash, hash_of_first_block)
 
+    def test_validate_blockchain(self):
+        
+        self.sample_blockchain.create_block(123123123)
+        self.sample_blockchain.create_block(456456456)
 
+        self.assertTrue(self.sample_blockchain.validate())
