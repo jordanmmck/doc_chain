@@ -22,6 +22,7 @@ class test_blockchain(unittest.TestCase):
     def setUp(self):
         self.sample_blockchain = BlockChain()
 
+
     def test_create_genesis_block(self):
         # act
         self.sample_blockchain.create_block(123123123)
@@ -32,15 +33,13 @@ class test_blockchain(unittest.TestCase):
 
     def test_create_non_genesis_block(self):
         # arrange
-        self.sample_blockchain.create_block(45325345524)
-        self.sample_blockchain.create_block(123)
+        self.sample_blockchain.create_block(123123123)
+        self.sample_blockchain.create_block(456456456)
 
         # act
-        hash_of_first_block = hash(self.sample_blockchain.blockchain[0])
-        print(hash_of_first_block)
+        hash_of_first_block = hash(self.sample_blockchain.blockchain[0].block_string)
 
         # assert
-        self.assertEqual(self.sample_blockchain.num_blocks, 2)
         self.assertEqual(self.sample_blockchain.blockchain[1].parent_hash, hash_of_first_block)
 
 

@@ -1,7 +1,5 @@
 import hashlib
 import random
-import array
-import json
 import sys
 
 
@@ -20,16 +18,13 @@ class Block(object):
     def __init__(self, parent_hash, document_hash):
         self.parent_hash = parent_hash
         self.document_hash = document_hash
-        self.nonce = random.randint(0, sys.maxsize)
+        self.block_string = '{parent_hash}/{document_hash}/'.format(
+            parent_hash=str(self.parent_hash),
+            document_hash=str(self.document_hash)
+        )
 
-    def _get_payload_string(self):
-        block_string = '{hash}/{document_hash}/{nonce}'.format(
-                        hash=str(self.parent_hash),
-                        document_hash=str(self.document_hash),
-                        nonce=str(self.nonce)
-                    )
-
-        return block_string
+    def __repr__(self):
+        return self.block_string
 
     """
         difficulty: 0-256
@@ -38,16 +33,19 @@ class Block(object):
             Each level is 2 times more difficult
     """
     def mine(self, difficulty):
-
         target = 2 ** (257 - difficulty) - 1
         hash_val = 2 ** (257) - 1
+        nonce = random.randint(0, sys.maxsize)
 
-        block_string = self._get_payload_string()
+        # set block string with initial nonce and hash it
+        block_string = self.block_string + str(nonce)
+        hash_val = hash(block_string)
         while hash_val > target:
+            nonce = (nonce + 1) % sys.maxsize
+            block_string = self.block_string + str(nonce)
             hash_val = hash(block_string)
-            block_string = self._get_payload_string()
-            self.nonce = (self.nonce + 1) % sys.maxsize
 
+        self.block_string = block_string
         return hash_val
 
 
@@ -65,19 +63,22 @@ class BlockChain(object):
         self.blockchain.append(block)
         self.num_blocks += 1
 
+    def _drop_blocks(self):
+        self.blockchain = []
+
     def hash_document(self, document):
-        return random.randint(0,100000000000)
+        return hash(document)
 
     def validate_blockchain(self):
         pass
 
     def create_block(self, document):
         document_hash = self.hash_document(document)
-        block = Block(self.last_block_hash, document_hash)
-        self._append_block(block)
+        fresh_block = Block(self.last_block_hash, document_hash)
+        self._append_block(fresh_block)
 
         if self.difficulty == 0:
             self.calibrate_difficulty()
 
-        self.last_block_hash = block.mine(3)
+        self.last_block_hash = fresh_block.mine(3)
 
