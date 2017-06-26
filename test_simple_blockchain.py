@@ -46,8 +46,6 @@ class test_blockchain(unittest.TestCase):
         # arrange
         self.sample_blockchain.create_block(123123123, 'doc1')
         self.sample_blockchain.create_block(456456456, 'doc2')
-        # print(self.sample_blockchain)
-        print(self.sample_blockchain.pretty_print())
 
         # act, assert
         self.assertTrue(self.sample_blockchain.validate())
