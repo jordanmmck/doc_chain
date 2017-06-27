@@ -7,6 +7,8 @@ Each block consists of the hash of the previous block, the document name, the ha
 
 Mining autocalibrates to take at least 1 second. Mining uses SHA-256 to hash the block along with an incrementing nonce (like Bitcoin).
 
+Note: Having the blockchain does not actually prove order of existence, only that all documents existed at the time the blockchain was made.
+
 ## Run tests
 python3 -m unittest discover tests
 
