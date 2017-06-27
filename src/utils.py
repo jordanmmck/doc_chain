@@ -5,7 +5,6 @@ import time
 
 
 """
-    Takes any arg form?
     Returns digest in int form
 """
 def sha_256(payload):
