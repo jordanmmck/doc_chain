@@ -1,13 +1,17 @@
+import sys
+
 from .blockchain import BlockChain
+from .utils import calibrate_difficulty
 
 
-class DocumentOrderOfExistence(object):
-    def __init__(self):
-        self.blockchain = BlockChain()
-        self.document_count = 0
+difficulty = calibrate_difficulty()
+blockchain = BlockChain(difficulty)
 
-    def find_doc_position(self, document):
-        pass
+doc_list = sys.argv[1:]
+for doc in doc_list:
+    f = open(doc, "rb")
+    data = f.read()
+    blockchain.create_block(data, doc)
+    f.close()
 
-    def get_full_doc_ordering(self):
-        pass
+blockchain.pretty_print()

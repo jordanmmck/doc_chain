@@ -1,22 +1,13 @@
-import random
-import sys
-import time
-
 from .utils import sha_256
 from .block import Block
 
 
-BLOCK_TIME_SEC = 1
-START_DIFFICULTY = 16
-MAX_DIFFICULTY = 256
-DIFFICULTY_STEP_SIZE = 2
-
 class BlockChain(object):
-    def __init__(self):
+    def __init__(self, difficulty):
         self.blockchain = []
         self.num_blocks = 0
         self.last_block_hash = 0
-        self.difficulty = self._calibrate_difficulty()
+        self.difficulty = difficulty
         self.head = None
 
     def pretty_print(self):
@@ -25,25 +16,6 @@ class BlockChain(object):
             block.pretty_print()
             print("\t\t|")
             print("\t\tv")
-
-
-    """
-        Adjust difficulty until mining time approximates BLOCK_TIME_SEC
-    """
-    def _calibrate_difficulty(self):
-        for difficulty in range(START_DIFFICULTY, MAX_DIFFICULTY, DIFFICULTY_STEP_SIZE):
-            target = 2 ** (257 - difficulty) - 1
-            hash_val = 2 ** (257) - 1
-            nonce = random.randint(0, sys.maxsize)
-
-            start = time.time()
-            hash_val = sha_256(nonce)
-            while hash_val > target:
-                nonce += 1
-                hash_val = sha_256(nonce)
-            end = time.time()
-            if(end - start) > BLOCK_TIME_SEC:
-                return difficulty
 
     def _append_block(self, block):
         self.blockchain.append(block)
