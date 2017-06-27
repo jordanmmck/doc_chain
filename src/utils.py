@@ -25,7 +25,7 @@ DIFFICULTY_STEP_SIZE = 1
 """
 def calibrate_difficulty():
     # for testing
-    return 1
+    # return 1
     print("starting calibration...")
     for difficulty in range(START_DIFFICULTY, MAX_DIFFICULTY, DIFFICULTY_STEP_SIZE):
         target = 2 ** (257 - difficulty) - 1

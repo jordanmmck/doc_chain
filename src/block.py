@@ -47,6 +47,8 @@ class Block(object):
         # set block string with initial nonce and hash it
         block_string = self.block_string + str(nonce)
         hash_val = sha_256(block_string)
+
+        print("mining block...")
         while hash_val > target:
             nonce = (nonce + 1) % sys.maxsize
             block_string = self.block_string + str(nonce)
