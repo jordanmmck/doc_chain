@@ -7,7 +7,7 @@ A blockchain is constructed from hashes of documents. Mining calibrates to ~1 se
 ## Run tests
 python3 -m unittest discover tests
 
-Sample output:
+## Sample output
 
 ```
 Creating blockchain
