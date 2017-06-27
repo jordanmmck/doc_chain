@@ -1,4 +1,4 @@
-from simple_blockchain import BlockChain
+from src.blockchain import BlockChain
 
 print('Creating blockchain')
 print('Adjusting difficulty...')

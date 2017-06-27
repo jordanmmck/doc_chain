@@ -4,6 +4,9 @@ Simple blockchain demo written in Python.
 
 A blockchain is constructed from hashes of documents. Mining calibrates to ~1 sec per block for host machine. Blocks are mined using SHA-256.
 
+## Run tests
+python3 -m unittest discover tests
+
 Sample output:
 
 ```

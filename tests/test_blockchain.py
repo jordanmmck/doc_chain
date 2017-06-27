@@ -1,21 +1,9 @@
 import unittest
-from simple_blockchain import Block, BlockChain, sha256
+from src.blockchain import BlockChain
+from src.block import Block
 
+from src.utils import sha_256
 
-class test_block(unittest.TestCase):
-
-    def setUp(self):
-        self.sample_block = Block('0x123fff', 123123123, 'my_doc')
-
-    def test_mine_hash_val_less_than_target(self):
-        # arrange
-        difficulty = 3
-
-        # act
-        hash_val = self.sample_block.mine(difficulty)
-
-        # assert
-        assert hash_val < 2**(257-difficulty)-1
 
 class test_blockchain(unittest.TestCase):
 
@@ -39,7 +27,7 @@ class test_blockchain(unittest.TestCase):
         self.sample_blockchain.create_block(456456456, 'doc2')
 
         # assert
-        hash_of_first_block = sha256(self.sample_blockchain.blockchain[0].block_string)
+        hash_of_first_block = sha_256(self.sample_blockchain.blockchain[0].block_string)
         self.assertEqual(self.sample_blockchain.blockchain[1].parent_hash, hash_of_first_block)
 
     def test_validate_blockchain(self):
@@ -50,5 +38,4 @@ class test_blockchain(unittest.TestCase):
         # act, assert
         self.assertTrue(self.sample_blockchain.validate())
 
-class test_document_order_of_existence(unittest.TestCase):
-    pass
+
