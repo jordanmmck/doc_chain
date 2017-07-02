@@ -1,15 +1,14 @@
 import unittest
+
 from src.blockchain import BlockChain
 from src.block import Block
-
 from src.utils import sha_256
 
 
 class test_blockchain(unittest.TestCase):
 
     def setUp(self):
-        self.sample_blockchain = BlockChain()
-
+        self.sample_blockchain = BlockChain(1)
 
     def test_create_genesis_block(self):
         # act

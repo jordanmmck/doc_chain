@@ -5,7 +5,6 @@ from src.block import Block
 from src.utils import sha_256
 
 
-print('unitests found')
 class test_block(unittest.TestCase):
 
     def setUp(self):
