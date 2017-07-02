@@ -1,7 +1,7 @@
-# Doc Miner
+# Doc Chain
 A simple blockchain demo.
 
-Doc Miner takes files as arguments and uses them to constrcut a blockchain. Each block consists of the hash of the previous block, the document name, the hash of the document and a nonce used for mining. 
+Doc Chain takes files as arguments and uses them to constrcut a blockchain. Each block consists of the hash of the previous block, the document name, the hash of the document and a nonce used for mining. 
 
 Mining autocalibrates to take at least 1 second. Mining uses SHA-256 to hash the block along with an incrementing nonce (like Bitcoin).
 
@@ -14,7 +14,7 @@ python3 -m unittest discover tests
 
 ## Usage
 ```
-python3 -m src.doc_miner d1.txt d2.txt d3.txt
+python3 -m src.doc_chain d1.txt d2.txt d3.txt
 ```
 
 ## Sample output
