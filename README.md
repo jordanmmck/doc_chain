@@ -1,11 +1,11 @@
 # Doc Chain
 A simple blockchain demo.
 
-Doc Chain takes files as arguments and uses them to constrcut a blockchain. Each block consists of the hash of the previous block, the document name, the hash of the document and a nonce used for mining. 
+Doc Chain takes files (of any type) as arguments and uses them to construct a blockchain. Each block consists of the hash of the previous block, the document name, the hash of the document and a nonce used for mining. 
 
-Mining autocalibrates to take at least 1 second. Mining uses SHA-256 to hash the block along with an incrementing nonce (like Bitcoin).
+Mining auto-calibrates to take at least 1 second. Mining uses SHA-256 to hash the block with an incrementing nonce (like Bitcoin).
 
-Note: Having the blockchain does not actually prove order of existence, only that all documents existed at the time the blockchain was made.
+Note: Having this blockchain does not actually prove order of existence, only that all documents existed at the time the blockchain was made.
 
 ## Run tests
 ```
@@ -20,6 +20,7 @@ python3 -m src.doc_chain d1.txt d2.txt d3.txt
 ## Sample output
 
 ```
+
 starting calibration...
 mining block...
 mining block...
