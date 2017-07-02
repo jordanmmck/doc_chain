@@ -23,9 +23,7 @@ DIFFICULTY_STEP_SIZE = 1
     Adjust difficulty until mining time approximates BLOCK_TIME_SEC
 """
 def calibrate_difficulty():
-    # for testing
-    # return 1
-    print("starting calibration...")
+    print("\nstarting calibration...")
     for difficulty in range(START_DIFFICULTY, MAX_DIFFICULTY, DIFFICULTY_STEP_SIZE):
         target = 2 ** (257 - difficulty) - 1
         hash_val = 2 ** (257) - 1
